@@ -3,6 +3,7 @@
 #include "bitboards.h"
 #include <stdio.h>
 
+// a comment
 int main(int argc, char *argv[]) {
     initialise_all();
 
