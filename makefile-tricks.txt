@@ -1,0 +1,8 @@
+-header files given by DEPS
+-object files given by OBJ
+-'%.o: %.c $(DEPS)' means each object file depends on the corresponding C file
+    and just put all the header files in there to be safe
+-$@ references the target
+-'-o' means output the compilation into _____
+-$< references the first dependency
+-$^ references each dependency
