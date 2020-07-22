@@ -24,3 +24,14 @@ void printBitBoard(U64 bitBoard) {
         printf("\n");
     }
 }
+
+int countBits(U64 board) {
+    int count = 0, n = board;
+    while (n != 0) {
+        if (n & 1) {
+            count++;
+        }
+        n>>=1;
+    }
+    return count;
+}

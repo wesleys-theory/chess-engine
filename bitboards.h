@@ -5,4 +5,6 @@
 
 void printBitBoard(U64 bitBoard);
 
+int countBits(U64 board);
+
 #endif
