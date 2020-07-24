@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "definitions.h"
+#include "hashkeys.h"
 #include <ctype.h>
 
 void ResetBoard(board_t *pos) {
@@ -136,5 +137,42 @@ int ParseFEN(char *fen, board_t *pos) {
         rank--;
     }
 
-    return 1;
+    index++;
+    assert(fen[index] == 'w' || fen[index] == 'b');
+    pos->side = (fen[index] == 'w') ? WHITE : BLACK;
+    index += 2;
+
+    for (int i = 0; i < 4; i++) {
+        if (fen[index] == ' ') {
+            break;
+        }
+        switch(fen[index]) {
+            case 'K': pos->castlePerm |= WKCA; break;
+            case 'Q': pos->castlePerm |= WQCA; break;
+            case 'k': pos->castlePerm |= BKCA; break;
+            case 'q': pos->castlePerm |= BQCA; break;
+        }
+        index++;
+    }
+    index++;
+
+    assert(pos->castlePerm >= 0 && pos->castlePerm <= 15);
+
+    if (fen[index] != '-') {
+        file = fen[index] - 'a';
+        rank = fen[++index] - '1';
+
+        assert(file >= FILE_A && file <= FILE_H);
+        assert(rank >= RANK_1 && rank <= RANK_8);
+
+        pos->enPas = FR2SQ(file, rank);
+    }
+    index++;
+
+    pos->fiftyMove = fen[index += 2];
+    
+
+    pos->hashKey = GeneratePosKey(pos);
+
+    return 0;
 }
