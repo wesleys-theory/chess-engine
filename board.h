@@ -5,7 +5,8 @@
 
 void ResetBoard(board_t *pos);
 int ParseFEN(char *fen, board_t *pos);
-void PrintBoard(board_t *pos);
+void PrintBoard(const board_t *pos);
+void UpdateListsMaterial(board_t *pos);
 
 
 #endif

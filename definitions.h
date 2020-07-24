@@ -70,9 +70,10 @@ typedef struct {
     // Arrays for the total number of pieces on the board
     int pceNum[13];
     // 3 : white, black, and both
-    int bigPce[3]; // Anything that isn't a pawn
-    int majPce[3]; // Rooks and queens
-    int minPce[3]; // Bishops and knights
+    int bigPce[2]; // Anything that isn't a pawn
+    int majPce[2]; // Rooks and queens
+    int minPce[2]; // Bishops and knights
+    int material[2]; // Material score
 
     int castlePerm;
 
@@ -113,6 +114,11 @@ extern char PceChar[];
 extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
+extern int PieceBig[13];
+extern int PieceMaj[13];
+extern int PieceMin[13];
+extern int PieceVal[13];
+extern int PieceCol[13];
 
 void test();
 

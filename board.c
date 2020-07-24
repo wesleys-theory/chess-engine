@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "definitions.h"
 #include "hashkeys.h"
+#include "board.h"
 #include <ctype.h>
 
 void ResetBoard(board_t *pos) {
@@ -14,12 +15,13 @@ void ResetBoard(board_t *pos) {
         pos->pieces[SMALL2BIG(i)] = EMPTY;
     }
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 2; i++) {
         pos->bigPce[i] = 0;
         pos->majPce[i] = 0;
         pos->minPce[i] = 0;
         pos->pawns[i] = 0ULL;
     }
+    pos->pawns[3] = 0ULL;
 
     for (i = 0; i < 13; i++) {
         pos->pceNum[i] = 0;
@@ -178,10 +180,13 @@ int ParseFEN(char *fen, board_t *pos) {
 
     pos->hashKey = GeneratePosKey(pos);
 
+    UpdateListsMaterial(pos);
+
     return 0;
 }
 
 void PrintBoard(const board_t *pos) {
+    
     int sq, file, rank, piece;
 
     printf("\n Game board: \n\n");
@@ -209,4 +214,27 @@ void PrintBoard(const board_t *pos) {
         pos->castlePerm & BKCA ? 'k' : '-',
         pos->castlePerm & BQCA ? 'q' : '-');
     printf("PosKey: %11I64X\n", pos->hashKey);
+}
+
+// Updates the material counters based on the pieces on the board
+void UpdateListsMaterial(board_t *pos) {
+    int piece, sq, i, colour;
+
+    for (i = 0; i < NUM_SQUARES; i++) {
+        sq = i;
+        piece = pos->pieces[i];
+        if (piece != OFFBOARD && piece != EMPTY) {
+            colour = PieceCol[piece];
+            if (PieceBig[piece]) pos->bigPce[colour]++;
+            if (PieceMin[piece]) pos->bigPce[colour]++;
+            if (PieceMaj[piece]) pos->bigPce[colour]++;
+
+            pos->material[colour] += PieceVal[piece];
+
+            pos->pList[piece][pos->pceNum[piece]++] = sq;
+
+            if (piece == wK) pos->KingSquare[colour] = sq;
+            if (piece == bK) pos->KingSquare[colour] = sq;
+        }
+    }
 }
