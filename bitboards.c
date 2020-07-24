@@ -8,11 +8,10 @@ void printBitBoard(U64 bitBoard) {
 
     int rank, file;
 
-    printf("\n");
     for (rank = RANK_8; rank >= RANK_1; rank--) {
         for (file = FILE_A; file <= FILE_H; file++) {
-            int indexBig = fr_to_sq(file, rank);
-            int index64 = big_to_small[indexBig];
+            int indexBig = FR2SQ(file, rank);
+            int index64 = BIG2SMALL(indexBig);
 
             if ((shift << index64) & bitBoard) {
                 printf("X ");
@@ -23,6 +22,7 @@ void printBitBoard(U64 bitBoard) {
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 int countBits(U64 board) {

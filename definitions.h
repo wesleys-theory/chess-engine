@@ -85,11 +85,27 @@ typedef struct {
 } board_t;
 
 /* MACROS */
-#define fr_to_sq(f,r) (f + 21 + r*10)
+
+// Convert file,rank to index on big board
+#define FR2SQ(f,r) (f + 21 + r*10)
+
+// Convert index on big board to index on small board
+#define BIG2SMALL(bigIndex) (big_to_small[bigIndex])
+
+// Convert index on small board to index on big board
+#define SMALL2BIG(smallIndex) (small_to_big[smallIndex])
+
+// Set a given bit on a bitboard
+#define SETBIT(bb, i) ((bb) |= SetMask[i])
+
+// Clear a given bit on a bitboard
+#define CLEARBIT(bb, i) ((bb) &= ClearMask[i])
 
 /* GLOBALS */
 extern int big_to_small[NUM_SQUARES];
 extern int small_to_big[64];
+extern U64 SetMask[64];
+extern U64 ClearMask[64];
 
 void test();
 

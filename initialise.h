@@ -3,5 +3,6 @@
 
 void initialise_conversions();
 void initialise_all();
+void initBitMasks();
 
 #endif
