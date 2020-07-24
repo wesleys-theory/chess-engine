@@ -65,7 +65,7 @@ typedef struct {
     int histPly;
 
     // Unique key generated for each position (used for determining repetitions)
-    U64 posKey;
+    U64 hashKey;
 
     // Arrays for the total number of pieces on the board
     int pceNum[13];
@@ -106,6 +106,9 @@ extern int big_to_small[NUM_SQUARES];
 extern int small_to_big[64];
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
+extern U64 PieceKeys[13][120];
+extern U64 SideKey;
+extern U64 CastleKeys[16];
 
 void test();
 

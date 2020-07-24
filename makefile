@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall
-DEPS = definitions.h initialise.h bitboards.h
-OBJ = main.o chess.o initialise.o bitboards.o
+DEPS = definitions.h initialise.h bitboards.h hashkeys.h
+OBJ = main.o chess.o initialise.o bitboards.o hashkeys.o
 
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $<

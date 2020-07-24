@@ -1,10 +1,12 @@
 #include "definitions.h"
 #include "initialise.h"
-
+#include "hashkeys.h"
+#include <stdlib.h>
 
 
 int big_to_small[NUM_SQUARES];
 int small_to_big[64];
+
 
 // Masks used for setting and clearing bits on a bitboard
 U64 SetMask[64];
@@ -14,6 +16,7 @@ U64 ClearMask[64];
 void initialise_all() {
     initialise_conversions();
     initBitMasks();
+    initHashKeys();
 }
 
 /** function to initialise arrays that convert positions in the 64 square array
