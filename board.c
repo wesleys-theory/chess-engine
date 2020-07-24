@@ -123,10 +123,14 @@ int ParseFEN(char *fen, board_t *pos) {
                     break;
                 case '0' ... '9':
                     num = ch - '0';
-                    file += num;
+                    for (int i = file; i < file + num; i++) {
+                        squareBig = FR2SQ(i, rank);
+                        pos->pieces[squareBig] = EMPTY;
+                    }
+                    file += num - 1;
                     break;
-                case '\\':
-                    // do nothing
+                case '/':
+                    file -= 1;
                     break;
                 default:
                     printf("FEN Parsing error\n");
@@ -175,4 +179,34 @@ int ParseFEN(char *fen, board_t *pos) {
     pos->hashKey = GeneratePosKey(pos);
 
     return 0;
+}
+
+void PrintBoard(const board_t *pos) {
+    int sq, file, rank, piece;
+
+    printf("\n Game board: \n\n");
+
+    for (rank = RANK_8; rank >= RANK_1; rank--) {
+        printf("%d ", rank + 1);
+        for(file = FILE_A; file <= FILE_H; file++) {
+            sq = FR2SQ(file, rank);
+            piece = pos->pieces[sq];
+            printf("%3c", PceChar[piece]);
+        }
+        printf("\n");
+    }
+
+    printf("\n  ");
+    for (file = FILE_A; file <= FILE_H; file++) {
+        printf("%3c", FileChar[file]);
+    }
+    printf("\n");
+    printf("side: %c\n", SideChar[pos->side]);
+    printf("enPas: %d\n", pos->enPas);
+    printf("castle:%c%c%c%c\n",
+        pos->castlePerm & WKCA ? 'K' : '-',
+        pos->castlePerm & WQCA ? 'Q' : '-',
+        pos->castlePerm & BKCA ? 'k' : '-',
+        pos->castlePerm & BQCA ? 'q' : '-');
+    printf("PosKey: %11I64X\n", pos->hashKey);
 }

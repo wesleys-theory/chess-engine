@@ -31,7 +31,7 @@ U64 GeneratePosKey(const board_t *pos) {
      *  **/
     for (sq = 0; sq < NUM_SQUARES; sq++) {
         piece = pos->pieces[sq];
-        if (piece!=NO_SQ && piece!=EMPTY) {
+        if (piece!=NO_SQ && piece!=EMPTY && piece!= OFFBOARD) {
             assert(piece>=wP && piece<=bK);
             finalKey ^= PieceKeys[piece][sq];
         }
