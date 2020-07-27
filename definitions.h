@@ -119,6 +119,8 @@ extern int PieceMaj[13];
 extern int PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
+extern int Files[NUM_SQUARES];
+extern int Ranks[NUM_SQUARES];
 
 void test();
 

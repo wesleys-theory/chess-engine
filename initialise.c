@@ -12,11 +12,16 @@ int small_to_big[64];
 U64 SetMask[64];
 U64 ClearMask[64];
 
+// Arrays used for determining the rank/file of a given square
+int Files[NUM_SQUARES];
+int Ranks[NUM_SQUARES];
+
 // called from main
 void initialise_all() {
     initialise_conversions();
     initBitMasks();
     initHashKeys();
+    initFilesRanks();
 }
 
 /** function to initialise arrays that convert positions in the 64 square array
@@ -58,3 +63,19 @@ void initBitMasks() {
     }
 }
 
+void initFilesRanks() {
+
+    for (int i = 0; i < NUM_SQUARES; i++) {
+        Files[i] = OFFBOARD;
+        Ranks[i] = OFFBOARD;
+    }
+
+    int file, rank;
+
+    for (rank = RANK_1; rank <= RANK_8; rank++) {
+        for (file = FILE_A; file <= FILE_H; file++) {
+            Files[FR2SQ(file, rank)] = file;
+            Ranks[FR2SQ(file, rank)] = rank;
+        }
+    }
+}
