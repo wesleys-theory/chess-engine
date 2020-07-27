@@ -7,4 +7,6 @@ void printBitBoard(U64 bitBoard);
 
 int countBits(U64 board);
 
+int PopBit(U64 *bb);
+
 #endif

@@ -2,6 +2,7 @@
 #include "definitions.h"
 #include "hashkeys.h"
 #include "board.h"
+#include "bitboards.h"
 #include <ctype.h>
 
 void ResetBoard(board_t *pos) {
@@ -21,7 +22,7 @@ void ResetBoard(board_t *pos) {
         pos->minPce[i] = 0;
         pos->pawns[i] = 0ULL;
     }
-    pos->pawns[3] = 0ULL;
+    pos->pawns[2] = 0ULL;
 
     for (i = 0; i < 13; i++) {
         pos->pceNum[i] = 0;
@@ -176,11 +177,11 @@ int ParseFEN(char *fen, board_t *pos) {
     index++;
 
     pos->fiftyMove = fen[index += 2];
-    
+
+    UpdateListsMaterial(pos);
 
     pos->hashKey = GeneratePosKey(pos);
 
-    UpdateListsMaterial(pos);
 
     return 0;
 }
@@ -220,14 +221,22 @@ void PrintBoard(const board_t *pos) {
 void UpdateListsMaterial(board_t *pos) {
     int piece, sq, i, colour;
 
+    printf("castleperm = %d\n", pos->castlePerm);
+
+    pos->bigPce[WHITE] = 0; pos->bigPce[BLACK] = 0; pos->minPce[WHITE] = 0;
+    pos->minPce[BLACK] = 0; pos->majPce[WHITE] = 0; pos->majPce[BLACK] = 0;
+
+    pos->material[WHITE] = 0; pos->material[BLACK] = 0;
+
+
     for (i = 0; i < NUM_SQUARES; i++) {
         sq = i;
         piece = pos->pieces[i];
         if (piece != OFFBOARD && piece != EMPTY) {
             colour = PieceCol[piece];
             if (PieceBig[piece]) pos->bigPce[colour]++;
-            if (PieceMin[piece]) pos->bigPce[colour]++;
-            if (PieceMaj[piece]) pos->bigPce[colour]++;
+            if (PieceMin[piece]) pos->minPce[colour]++;
+            if (PieceMaj[piece]) pos->majPce[colour]++;
 
             pos->material[colour] += PieceVal[piece];
 
@@ -235,6 +244,97 @@ void UpdateListsMaterial(board_t *pos) {
 
             if (piece == wK) pos->KingSquare[colour] = sq;
             if (piece == bK) pos->KingSquare[colour] = sq;
+
+            if (piece == wP) {
+                SETBIT(pos->pawns[WHITE], BIG2SMALL(sq));
+                SETBIT(pos->pawns[BOTH], BIG2SMALL(sq));
+            }
+            else if (piece == bP) {
+                SETBIT(pos->pawns[BLACK], BIG2SMALL(sq));
+                SETBIT(pos->pawns[BOTH], BIG2SMALL(sq));
+            }
         }
     }
+}
+
+// Function to make sure the given position is legal and makes sense
+int CheckBoard(const board_t *pos) {
+    int pceNum[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int bigPce[2] = {0, 0};
+    int majPce[2] = {0, 0};
+    int minPce[2] = {0, 0};
+    int material[2] = {0, 0};
+
+    U64 pawns[3] = {0ULL, 0ULL, 0ULL};
+
+    pawns[WHITE] = pos->pawns[WHITE];
+    pawns[BLACK] = pos->pawns[BLACK];
+    pawns[BOTH] = pos->pawns[BOTH];
+
+    int piece, i, bigIndex, smallIndex, colour;
+
+    // Check piece lists allign with the board array
+    for (piece = wP; piece <= bK; piece++) {
+        for (i = 0; i < pos->pceNum[piece]; i++) {
+            bigIndex = pos->pList[piece][i];
+            assert(pos->pieces[bigIndex] == piece);
+        }
+    }
+
+    // Check piece count is correct
+    for (smallIndex = 0; smallIndex < 64; smallIndex++) {
+        bigIndex = SMALL2BIG(smallIndex);
+        piece = pos->pieces[bigIndex];
+        pceNum[piece]++;
+        colour = PieceCol[piece];
+        if (PieceBig[piece]) bigPce[colour]++;
+        if (PieceMaj[piece]) majPce[colour]++;
+        if (PieceMin[piece]) minPce[colour]++;
+
+        material[colour] += PieceVal[piece];
+    }
+
+    for (piece = wP; piece <= bK; piece++) {
+        assert(pceNum[piece] == pos->pceNum[piece]);
+    }
+
+    // check bitboard counts
+    assert(countBits(pawns[WHITE]) == pos->pceNum[wP]);
+    assert(countBits(pawns[BLACK]) == pos->pceNum[bP]);
+    assert(countBits(pawns[BOTH]) == (pos->pceNum[wP] + pos->pceNum[bP]));
+
+    // check bitboard squares
+    while (pawns[WHITE]) {
+        smallIndex = PopBit(&pawns[WHITE]);
+        assert(pos->pieces[SMALL2BIG(smallIndex)] == wP);
+    }
+    while (pawns[BLACK]) {
+        smallIndex = PopBit(&pawns[BLACK]);
+        assert(pos->pieces[SMALL2BIG(smallIndex)] == bP);
+    }
+    while (pawns[BOTH]) {
+        smallIndex = PopBit(&pawns[BOTH]);
+        assert(pos->pieces[SMALL2BIG(smallIndex)] == wP || pos->pieces[SMALL2BIG(smallIndex)] == bP);
+    }
+
+    // Make sure the material is the same
+    assert(material[WHITE]==pos->material[WHITE] && material[BLACK]==pos->material[BLACK]);
+	assert(minPce[WHITE]==pos->minPce[WHITE] && minPce[BLACK]==pos->minPce[BLACK]);
+	assert(majPce[WHITE]==pos->majPce[WHITE] && majPce[BLACK]==pos->majPce[BLACK]);
+	assert(bigPce[WHITE]==pos->bigPce[WHITE] && bigPce[BLACK]==pos->bigPce[BLACK]);
+
+    assert((pos->side == WHITE) | (pos->side == BLACK));
+    assert(GeneratePosKey(pos) == pos->hashKey);
+
+    /** enPassant square must either be on the sixth rank with white to move or 
+     * 3rd rank with black to move
+     * */
+    assert(pos->enPas == NO_SQ || (Ranks[pos->enPas] == RANK_3 && pos->side == BLACK)
+            || (Ranks[pos->enPas] == RANK_6 && pos->side == WHITE));
+
+    // Make sure the king squares allign with the board array
+    assert(pos->pieces[pos->KingSquare[WHITE]] == wK &&
+           pos->pieces[pos->KingSquare[BLACK]] == bK);
+    
+    return 1;
 }

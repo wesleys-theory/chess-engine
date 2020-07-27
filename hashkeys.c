@@ -24,7 +24,7 @@ void initHashKeys() {
 // Generate a hashkey based on the given board by XOR'ing everything
 U64 GeneratePosKey(const board_t *pos) {
     int sq, piece;
-    U64 finalKey;
+    U64 finalKey = 0;
 
     /** Each square/piece combination has a unique key in PieceKeys. finalKey
      *  is XOR'd with each square/piece combination

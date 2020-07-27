@@ -19,15 +19,19 @@ int main(int argc, char *argv[]) {
 
     ParseFEN(FEN1, board);
     PrintBoard(board);
+    CheckBoard(board);
 
     ParseFEN(FEN2, board);
     PrintBoard(board);
+    CheckBoard(board);
 
     ParseFEN(FEN3, board);
     PrintBoard(board);
+    CheckBoard(board);
 
     ParseFEN(FEN4, board);
     PrintBoard(board);
+    CheckBoard(board);
     
 
     return 0;
