@@ -102,25 +102,41 @@ typedef struct {
 // Clear a given bit on a bitboard
 #define CLEARBIT(bb, i) ((bb) &= ClearMask[i])
 
+// Ask about the nature of a piece
+#define IsBQ(p) (PieceBishopQueen[p])
+#define IsRQ(p) (PieceRookQueen[p])
+#define IsKn(p) (PieceKnight[p])
+#define IsKi(p) (PieceKing[p])
+
 /* GLOBALS */
 extern int big_to_small[NUM_SQUARES];
 extern int small_to_big[64];
+
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
+
 extern U64 PieceKeys[13][120];
 extern U64 SideKey;
 extern U64 CastleKeys[16];
+
 extern char PceChar[];
 extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
+
 extern int PieceBig[13];
 extern int PieceMaj[13];
 extern int PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
+
 extern int Files[NUM_SQUARES];
 extern int Ranks[NUM_SQUARES];
+
+extern int PieceKnight[13];
+extern int PieceKing[13];
+extern int PieceRookQueen[13];
+extern int PieceBishopQueen[13];
 
 void test();
 

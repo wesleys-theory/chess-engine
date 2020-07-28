@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "definitions.h"
 #include "hashkeys.h"
+#include "attack.h"
 #include "board.h"
 #include "bitboards.h"
 #include <ctype.h>
@@ -221,8 +222,6 @@ void PrintBoard(const board_t *pos) {
 void UpdateListsMaterial(board_t *pos) {
     int piece, sq, i, colour;
 
-    printf("castleperm = %d\n", pos->castlePerm);
-
     pos->bigPce[WHITE] = 0; pos->bigPce[BLACK] = 0; pos->minPce[WHITE] = 0;
     pos->minPce[BLACK] = 0; pos->majPce[WHITE] = 0; pos->majPce[BLACK] = 0;
 
@@ -337,4 +336,28 @@ int CheckBoard(const board_t *pos) {
            pos->pieces[pos->KingSquare[BLACK]] == bK);
     
     return 1;
+}
+
+void ShowSqAtBySide(const int side, const board_t *pos) {
+		
+	int rank = 0;
+	int file = 0;
+	int sq = 0;
+	
+	printf("\n\nSquares attacked by:%c\n",SideChar[side]);
+	for(rank = RANK_8; rank >= RANK_1; --rank) {
+		for(file = FILE_A; file <= FILE_H; ++file) {
+			sq = FR2SQ(file,rank);
+			if(SqAttacked(sq,side,pos)==TRUE) {
+				printf("X");
+			} else {
+				printf("-");
+			}
+            printf(" ");
+				
+		}
+		printf("\n");
+	}  
+    printf("\n\n");
+
 }
