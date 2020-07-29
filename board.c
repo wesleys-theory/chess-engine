@@ -361,3 +361,15 @@ void ShowSqAtBySide(const int side, const board_t *pos) {
     printf("\n\n");
 
 }
+
+void PrintBin(int move) {
+
+	int index = 0;
+	printf("As binary:\n");
+	for(index = 27; index >= 0; index--) {
+		if( (1<<index) & move) printf("1");
+		else printf("0");
+		if(index!=28 && index%4==0) printf(" ");
+	}
+	printf("\n");
+}

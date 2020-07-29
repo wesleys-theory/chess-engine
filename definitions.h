@@ -29,6 +29,13 @@ enum {FALSE, TRUE};
 // Castling permissions represented by a 4 bit int
 enum {WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8};
 
+
+typedef struct {
+    int move;
+    int score;
+} move_t;
+
+
 typedef struct {
     int move;
     int castlePerm;
@@ -85,7 +92,34 @@ typedef struct {
 
 } board_t;
 
+/* GAME MOVE */
+// The game moves are represented as 28-bit integers
+
+/*
+0000 0000 0000 0000 0000 0xxx xxxx -> From 0x3f
+0000 0000 0000 00xx xxxx X000 0000 -> To >> 7, 0x3F
+0000 0000 00xx xx00 0000 0000 0000 -> Captured >> 14, 0xF
+0000 0000 0x00 0000 0000 0000 0000 -> EnPassant 0x40000
+0000 0000 x000 0000 0000 0000 0000 -> Pawn start 0x80000
+0000 xxxx 0000 0000 0000 0000 0000 -> Promoted piece >> 20, 0xF
+000x 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
+*/
+
+
 /* MACROS */
+
+// Get the information from a move
+#define FROMSQ(m) (m & 0x3F)
+#define TOSQ(m) ((m >> 7) & 0x3F)
+#define CAPTURED(m) ((m >> 14) & 0xF)
+#define PROMOTED(m) ((m >> 20) & 0xF)
+
+#define MFLAGEP 0x40000
+#define MFLAGPS 0x80000
+#define MFLAGCA 0x1000000
+
+#define MFLAGCAP 0x7C000
+#define MFLAGPROM 0xF00000
 
 // Convert file,rank to index on big board
 #define FR2SQ(f,r) (f + 21 + r*10)
