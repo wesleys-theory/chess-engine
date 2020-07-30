@@ -13,8 +13,8 @@ U64 SetMask[64];
 U64 ClearMask[64];
 
 // Arrays used for determining the rank/file of a given square
-int Files[NUM_SQUARES];
-int Ranks[NUM_SQUARES];
+int FileOf[NUM_SQUARES];
+int RankOf[NUM_SQUARES];
 
 // called from main
 void initialise_all() {
@@ -66,16 +66,16 @@ void initBitMasks() {
 void initFilesRanks() {
 
     for (int i = 0; i < NUM_SQUARES; i++) {
-        Files[i] = OFFBOARD;
-        Ranks[i] = OFFBOARD;
+        FileOf[i] = OFFBOARD;
+        RankOf[i] = OFFBOARD;
     }
 
     int file, rank;
 
     for (rank = RANK_1; rank <= RANK_8; rank++) {
         for (file = FILE_A; file <= FILE_H; file++) {
-            Files[FR2SQ(file, rank)] = file;
-            Ranks[FR2SQ(file, rank)] = rank;
+            FileOf[FR2SQ(file, rank)] = file;
+            RankOf[FR2SQ(file, rank)] = rank;
         }
     }
 }

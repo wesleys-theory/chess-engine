@@ -96,8 +96,8 @@ typedef struct {
 // The game moves are represented as 28-bit integers
 
 /*
-0000 0000 0000 0000 0000 0xxx xxxx -> From 0x3f
-0000 0000 0000 00xx xxxx X000 0000 -> To >> 7, 0x3F
+0000 0000 0000 0000 0000 0xxx xxxx -> From 0x7f
+0000 0000 0000 00xx xxxx x000 0000 -> To >> 7, 0x7F
 0000 0000 00xx xx00 0000 0000 0000 -> Captured >> 14, 0xF
 0000 0000 0x00 0000 0000 0000 0000 -> EnPassant 0x40000
 0000 0000 x000 0000 0000 0000 0000 -> Pawn start 0x80000
@@ -109,8 +109,8 @@ typedef struct {
 /* MACROS */
 
 // Get the information from a move
-#define FROMSQ(m) (m & 0x3F)
-#define TOSQ(m) ((m >> 7) & 0x3F)
+#define FROMSQ(m) (m & 0x7F)
+#define TOSQ(m) ((m >> 7) & 0x7F)
 #define CAPTURED(m) ((m >> 14) & 0xF)
 #define PROMOTED(m) ((m >> 20) & 0xF)
 
@@ -164,8 +164,8 @@ extern int PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
 
-extern int Files[NUM_SQUARES];
-extern int Ranks[NUM_SQUARES];
+extern int FileOf[NUM_SQUARES];
+extern int RankOf[NUM_SQUARES];
 
 extern int PieceKnight[13];
 extern int PieceKing[13];

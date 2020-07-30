@@ -3,6 +3,7 @@
 #include "bitboards.h"
 #include "board.h"
 #include "attack.h"
+#include "io.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,24 +15,20 @@
 int main(int argc, char *argv[]) {
     initialise_all();
 
-    board_t board[1];
-
-    ResetBoard(board);
-
-    ParseFEN(FEN4, board);
-    PrintBoard(board);
-    CheckBoard(board);
-
-    int move = 0, from = 6, to = 12, cap = wR, prom = bR;
-    move = (from) | (to >> 7) | (cap << 14) | (prom << 20);
-    printf("\ndec: %d, hex: %X\n", move, move);
-    PrintBin(move);
-
+    int move = 0, from = A2, to = H7, cap = wR, prom = wK;
+    move = (from) | (to << 7) | (cap << 14) | (prom << 20);
 
     printf("from:%d to:%d cap:%d prom:%d\n",
             FROMSQ(move), TOSQ(move), CAPTURED(move), PROMOTED(move));
     
-    
+    char *fromstr = PrSq(from), *tostr = PrSq(to), *movestr = PrMove(move);
+
+    printf("Algebraic from: %s\n", fromstr);
+    printf("Algebraic to: %s\n", tostr);
+    printf("Algebraic move: %s\n", movestr);
+
+
+    free(fromstr); free(tostr); free(movestr);
 
     return 0;
 }

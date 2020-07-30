@@ -328,8 +328,8 @@ int CheckBoard(const board_t *pos) {
     /** enPassant square must either be on the sixth rank with white to move or 
      * 3rd rank with black to move
      * */
-    assert(pos->enPas == NO_SQ || (Ranks[pos->enPas] == RANK_3 && pos->side == BLACK)
-            || (Ranks[pos->enPas] == RANK_6 && pos->side == WHITE));
+    assert(pos->enPas == NO_SQ || (RankOf[pos->enPas] == RANK_3 && pos->side == BLACK)
+            || (RankOf[pos->enPas] == RANK_6 && pos->side == WHITE));
 
     // Make sure the king squares allign with the board array
     assert(pos->pieces[pos->KingSquare[WHITE]] == wK &&
