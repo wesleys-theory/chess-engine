@@ -1,5 +1,7 @@
 #include "attack.h"
 #include "definitions.h"
+#include "validate.h"
+#include "board.h"
 
 // Directions of movement for each piece - queen = rook | bishop
 const int KnDir[8] = {-8, -19, -21, -12, 8, 19, 21, 12};
@@ -9,6 +11,10 @@ const int KiDir[8] = {-1, -10, 1, 10, -9, -11, 11, 9};
 
 // Checks if the given square is attacked by the given side
 int SqAttacked(const int sq, const int side, const board_t *pos) {
+
+    assert(SqOnBoard(sq));
+    assert(SideValid(side));
+    CheckBoard(pos);
     
     int pce, i, temp_sq;
 

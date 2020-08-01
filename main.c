@@ -1,6 +1,8 @@
 #include "definitions.h"
 #include "initialise.h"
 #include "bitboards.h"
+#include "movegen.h"
+#include "validate.h"
 #include "board.h"
 #include "attack.h"
 #include "io.h"

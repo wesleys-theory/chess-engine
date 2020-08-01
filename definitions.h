@@ -3,6 +3,7 @@
 
 #define NUM_SQUARES 120
 #define MAX_MOVES 2048
+#define MAXPOSITIONMOVES 256
 
 #include <stdlib.h>
 #include <assert.h>
@@ -35,6 +36,11 @@ typedef struct {
     int score;
 } move_t;
 
+
+typedef struct {
+    move_t moves[MAXPOSITIONMOVES];
+    int count;
+} movelist_t;
 
 typedef struct {
     int move;
