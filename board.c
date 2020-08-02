@@ -21,6 +21,7 @@ void ResetBoard(board_t *pos) {
         pos->bigPce[i] = 0;
         pos->majPce[i] = 0;
         pos->minPce[i] = 0;
+        pos->material[i] = 0;
         pos->pawns[i] = 0ULL;
     }
     pos->pawns[2] = 0ULL;
@@ -226,7 +227,6 @@ void UpdateListsMaterial(board_t *pos) {
     pos->minPce[BLACK] = 0; pos->majPce[WHITE] = 0; pos->majPce[BLACK] = 0;
 
     pos->material[WHITE] = 0; pos->material[BLACK] = 0;
-
 
     for (i = 0; i < NUM_SQUARES; i++) {
         sq = i;

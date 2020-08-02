@@ -183,6 +183,11 @@ extern int PieceKing[13];
 extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
 
+extern const int KnDir[8];
+extern const int RkDir[4];
+extern const int BiDir[4];
+extern const int KiDir[8];
+
 void test();
 
 #endif
