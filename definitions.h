@@ -120,11 +120,16 @@ typedef struct {
 #define CAPTURED(m) ((m >> 14) & 0xF)
 #define PROMOTED(m) ((m >> 20) & 0xF)
 
+//EnPassant
 #define MFLAGEP 0x40000
+//PawnStart
 #define MFLAGPS 0x80000
+//Castle
 #define MFLAGCA 0x1000000
 
+//Capture
 #define MFLAGCAP 0x7C000
+//Promotion
 #define MFLAGPROM 0xF00000
 
 // Convert file,rank to index on big board
